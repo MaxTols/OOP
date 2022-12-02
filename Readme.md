@@ -25,7 +25,23 @@ class Mentor:
 
 
 class Lecture(Mentor):
-    pass
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
+        self.grades = {}
+      
+    def _average_grade(self):
+        sum_grades, len_grades = 0, 0
+        for key, value in self.grades.items():
+            sum_grades += sum(value)
+            len_grades += len(value)
+        return round(sum_grades / len_grades, 1)
 
 class Reviewer(Mentor):
-    pass
+    def rate_hw(self, student, course, grade):
+        if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
+            if course in student.grades:
+                student.grades[course] += [grade]
+            else:
+                student.grades[course] = [grade]
+        else:
+            return 'Ошибка'
