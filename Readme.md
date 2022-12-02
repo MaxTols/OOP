@@ -16,12 +16,38 @@ class Student:
         else:
             return 'Ошибка'
 
+    def _average_grade(self):
+        sum_grades, len_grades = 0, 0
+        for key, value in self.grades.items():
+            sum_grades += sum(value)
+            len_grades += len(value)
+        return round(sum_grades / len_grades, 1)
+  
+    def __str__(self):
+        name = f'Имя: {self.name}'
+        surname = f'Фамилия: {self.surname}'
+        average = f'Средняя оценка за лекции: {self._average_grade()}'
+        courses_in_progress = f'Курсы в процессе изучения: {", ".join(i for i in self.courses_in_progress)}'
+        finished_courses = f'Завершенные курсы: {", ".join(j for j in self.finished_courses)}'
+        return name + '\n' + surname + '\n' + average  + '\n' + courses_in_progress + '\n' + finished_courses
+      
+    def __gt__(self, other):
+        if not isinstance(other, Student):
+            print('Not a Student!')
+            return
+        return self._average_grade() > other._average_grade()
+
 
 class Mentor:
     def __init__(self, name, surname):
         self.name = name
         self.surname = surname
         self.courses_attached = []
+
+    def __str__(self):
+        name = f'Имя: {self.name}'
+        surname = f'Фамилия: {self.surname}'
+        return name + '\n' + surname
 
 
 class Lecture(Mentor):
@@ -35,6 +61,19 @@ class Lecture(Mentor):
             sum_grades += sum(value)
             len_grades += len(value)
         return round(sum_grades / len_grades, 1)
+  
+    def __str__(self):
+        name = f'Имя: {self.name}'
+        surname = f'Фамилия: {self.surname}'
+        average = f'Средняя оценка за лекции: {self._average_grade()}'
+        return name + '\n' + surname + '\n' + average
+
+    def __lt__(self, other):
+        if not isinstance(other, Lecture):
+            print('Not a Lecture!')
+            return
+        return self._average_grade() < other._average_grade()
+
 
 class Reviewer(Mentor):
     def rate_hw(self, student, course, grade):
@@ -45,3 +84,8 @@ class Reviewer(Mentor):
                 student.grades[course] = [grade]
         else:
             return 'Ошибка'
+
+    def __str__(self):
+        name = f'Имя: {self.name}'
+        surname = f'Фамилия: {self.surname}'
+        return name + '\n' + surname
